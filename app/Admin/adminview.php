@@ -1,42 +1,27 @@
 <?php
-require_once('../../lib/db.php'); 
+require_once('../../lib/db.php');
+session_start();
+if (!isset($_SESSION['user/ID']) || $_SESSION["user/admin"]!=1) {
+	header('Location: ../../lib/error/error.php');
+	exit;
 
-$stmtProducts = $pdo->query("SELECT * FROM product");
+}
+
+$stmtProducts = $pdo->prepare("SELECT * FROM product");
+$stmtProducts->execute();
 $products = $stmtProducts->fetchAll();
 
-$stmtContacts = $pdo->query("SELECT * FROM contact");
+$stmtContacts = $pdo->prepare("SELECT * FROM contact");
+$stmtContacts->execute();
 $contacts = $stmtContacts->fetchAll();
 
-$stmtUsers = $pdo->query("SELECT * FROM user");
+$stmtUsers = $pdo->prepare("SELECT * FROM user");
+$stmtUsers->execute();
 $users = $stmtUsers->fetchAll();
-?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <title>Admin Dashboard</title>
-</head>
-<body>
-<!-- Navigation-->
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container px-4 px-lg-5">
-        <a class="navbar-brand" href="adminview.php">Admin Dashboard</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
-                <li class="nav-item"><a class="nav-link active" aria-current="page" href="index.php">Home</a></li>
-                <li class="nav-item"><a class="nav-link active" href="about.php">About Us</a></li>
-                <li class="nav-item"><a class="nav-link active" href="createproduct.php">Make Your Own Product</a></li>
-            </ul>
-            <form class="d-flex">
-                <a href="../auth/signout.php" class="btn btn-outline-dark">Sign Out</a>
-            </form>
-        </div>
-    </div>
-</nav>
+require_once("../../theme/header.php"); 
+setTitle("Admin Page");
+?>
 
 <div class="container mt-5">
     <h1>Manage Products</h1>
@@ -56,14 +41,14 @@ $users = $stmtUsers->fetchAll();
                     <td><?= ($product['name']) ?></td>
                     <td>$<?= number_format($product['price'], 2) ?></td>
                     <td>
-                        <a href="edit.php?id=<?= $product['product_ID'] ?>" class="btn btn-warning">Edit</a>
-                        <a href="delete.php?id=<?= $product['product_ID'] ?>" class="btn btn-danger" onclick="return confirm('Are you sure?');">Delete</a>
+                        <a href="../Products/edit.php?id=<?= $product['product_ID'] ?>" class="btn btn-warning">Edit</a>
+                        <a href="../Products/delete.php?id=<?= $product['product_ID'] ?>" class="btn btn-danger" onclick="return confirm('Are you sure?');">Delete</a>
                     </td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
     </table>
-    <a href="createproduct.php" class="btn btn-success">Create New Product</a>
+    <a href="../Products/createproduct.php" class="btn btn-success">Create New Product</a>
 </div>
 
 <div class="container mt-5">
@@ -85,7 +70,7 @@ $users = $stmtUsers->fetchAll();
                 <?php foreach ($contacts as $contact): ?>
                     <tr>
                         <td><?= $contact['Contact_ID'] ?></td>
-                        <td><?= $contact['user_ID'] ?></td>
+                        <td><?= $contact['User_ID'] ?></td>
                         <td><?= ($contact['message']) ?></td>
                         <td><?= ($contact['submission_date']) ?></td>
                         <td>
@@ -108,6 +93,7 @@ $users = $stmtUsers->fetchAll();
                 <th>Last Name</th>
                 <th>Email</th>
                 <th>Role</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -126,10 +112,10 @@ $users = $stmtUsers->fetchAll();
 				</tr>
 			<?php endforeach; ?>
 
-			
         </tbody>
     </table>
 	<a href="createuser.php" class="btn btn-success">Create New User</a>
 </div>
-</body>
-</html>
+<?php
+require_once("../../theme/footer.php");
+?>
