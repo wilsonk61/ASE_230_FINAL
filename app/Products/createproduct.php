@@ -1,30 +1,25 @@
 <?php
 session_start(); 
 require_once('../../lib/db.php'); 
-
-
-
+if (!isset($_SESSION['user/ID'])) {
+	header('Location: ../../lib/error/error.php');
+	exit;
+}
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && count($_POST) > 0) {
-    $name = $_POST['product_name'];
-    $price = $_POST['product_price'];
-    $image = $_POST['product_image'];
-    $description = $_POST['product_description'];
-
     $stmt = $pdo->prepare("INSERT INTO product (name, price, ImageURL, description, created_by) VALUES (?, ?, ?, ?, ?)");
-	$stmt->execute([$name, $price, $image, $description, 3]); // SIMULATED USER ID
-
-
-
+	$stmt->execute([$_POST['product_name'], $_POST['product_price'], $_POST['product_image'], $_POST['product_description'], $_SESSION['user/ID']]); 
     header('Location: index.php');
     exit;
-} else {
+}
+require_once("../../theme/header.php"); 
+setTitle("Create");
 ?>
     <br>
-    <div style="text-align: center; margin-bottom: 20px;">
-        <a href="index.php" style="padding: 10px 20px; background-color: #333; color: white; text-decoration: none; border-radius: 5px;">Go Back</a>
-    </div>
+    <div style="text-align: center; margin-bottom: 20px; padding: 30px">
+		<a href="index.php" style="padding: 10px 20px; background-color: #333; color: white; text-decoration: none; border-radius: 5px;">Return to Home Page</a>
+	</div>
     <br>
-    <form action="<?= ($_SERVER['PHP_SELF']) ?>" method="POST" style="max-width: 400px; margin: 0 auto; padding: 20px; border: 1px solid #ccc; border-radius: 10px; background-color: #fff; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+    <form method="POST" style="max-width: 400px; margin: 0 auto; padding: 20px; border: 1px solid #ccc; border-radius: 10px; background-color: #fff; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
         <h3 style="text-align: center; margin-bottom: 20px;">Add New Product</h3>
         <div style="margin-bottom: 15px;">
             <label for="product_name" style="display: block; margin-bottom: 5px;">Product Name</label>
@@ -45,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && count($_POST) > 0) {
         <button type="submit" style="width: 100%; padding: 10px; background-color: #333; color: white; border: none; border-radius: 5px; cursor: pointer;">Add Product</button>
     </form>
 <?php
-}
+require_once("../../theme/footer.php"); 
 ?>
 
 
