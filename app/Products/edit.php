@@ -1,7 +1,10 @@
 <?php
 session_start();
 require_once('../../lib/db.php'); 
-if (!isset($_SESSION['user/ID'])) die('You are not authorized in this area');
+if (!isset($_SESSION['user/ID'])) 
+	header('Location: ../../lib/error/error.php');
+	exit;
+}
 
 $productID = intval($_GET['id']); 
 
