@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once('../../lib/db.php'); 
-if (!isset($_SESSION['user/ID'])) 
+if (!isset($_SESSION['user/ID'])) {
 	header('Location: ../../lib/error/error.php');
 	exit;
 }
