@@ -3,5 +3,4 @@
 <ul>
   <li>Kyle Wilson</li>
   <li>Jackson Wise</li>
-  <li>Alex Wallace</li>
 </ul>
