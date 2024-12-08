@@ -6,6 +6,8 @@
 </ul>
 
 User - Email: test@gmail.com Password: password
+<br>
 Admin - Email: admin@gmail.com Password: admin
-Youtube link: TBD
+<br>
+Youtube link: https://youtu.be/Kl2pWTPITSs
 
